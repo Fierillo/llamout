@@ -139,7 +139,7 @@ export default function Page() {
               <tr>
                 <th className="p-3 text-left">ID</th>
                 <th className="p-3 text-left">Fecha</th>
-                <th className="p-3 text-left">Usuario</th>
+                <th className="p-3 text-left">Email/Pubkey</th>
                 <th className="p-3 text-center">Pago</th>
                 <th className="p-3 text-center">Check-in</th>
               </tr>
@@ -159,7 +159,7 @@ export default function Page() {
                         minute: '2-digit'
                       })}
                     </td>
-                    <td className="p-3">{customerData?.name || 'N/A'}</td>
+                    <td className="p-3">{customerData?.email || `NOSTR: ${customerData?.pubkey}`}</td>
                     <td className="p-3 text-center">{theOrder.paid ? 'SI' : 'NO'}</td>
                     <td className="p-3 text-center text-2xl">{theOrder.checkedIn ? '✅' : '❌'}</td>
                   </tr>
