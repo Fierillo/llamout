@@ -1,6 +1,16 @@
+import QRcode from "qrcode";
+
 export async function sendEmail(email: string, orderId: string) {
-    // 1. Generate QR code using free API service
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(orderId)}&size=200x200`;
+    // 1. Generate QR
+    const qrDataUrl = await QRcode.toDataURL(orderId, {
+      errorCorrectionLevel: 'H',
+      margin: 1,
+      width: 200,
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    });
   
     // 2. Email body 
     const emailBody = `
@@ -19,7 +29,7 @@ export async function sendEmail(email: string, orderId: string) {
                     </strong>
                     </p>
                     
-                    <img src="${qrUrl}" alt="Código QR de acceso" 
+                    <img src="${qrDataUrl}" alt="Código QR de acceso" 
                         style="display: block; margin: 20px auto; border: 1px solid #dddddd; padding: 10px; max-width: 200px;">
                     
                     <p style="color: #666666; font-size: 14px; margin: 15px 0 0 0; text-align: center;">
