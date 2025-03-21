@@ -12,6 +12,7 @@ An modified version of [original](https://github.com/unllamas/llamout) llamout.
 - Payments: [Lightning Network](https://lightning.network/)
 - UI Library: [Shadcn/ui](https://ui.shadcn.com/)
 - Email service: [Plunk](https://www.useplunk.com/)
+- Sendy email suscription service: [Sendy](https://sendy.co/)
 
 ## ✏️ Roadmap
 
@@ -24,6 +25,7 @@ An modified version of [original](https://github.com/unllamas/llamout) llamout.
 ### New implementations of La Crypta
 - [x] Email sending system with [Plunk](https://www.useplunk.com/)
 - [x] Check-in with QR scanner
+- [x] Sendy email suscription
 
 ## 🚀 Running Locally
 
