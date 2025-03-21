@@ -25,14 +25,6 @@ An modified version of [original](https://github.com/unllamas/llamout) llamout.
 - [x] Email sending system with [Plunk](https://www.useplunk.com/)
 - [x] Check-in with QR scanner
 
-### Soon
-- [ ] Validation with Zod
-- [ ] Customize Checkout
-- [ ] Onboarding Process
-- [ ] Authentication with Instantdb or Nostr
-- [ ] Roles System
-
-
 ## 🚀 Running Locally
 
 1. Clone the repository
