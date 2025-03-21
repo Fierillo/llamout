@@ -9,8 +9,9 @@ export async function addCustomer(props: {
   name: string;
   email: string;
   pubkey: string;
+  newsletter: boolean;
 }): Promise<string> {
-  const { store_id, name, email, pubkey } = props;
+  const { store_id, name, email, pubkey, newsletter } = props;
 
   // TO-DO
   // validate: store_id

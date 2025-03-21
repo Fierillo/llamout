@@ -20,6 +20,9 @@ import { Card, CardContent } from '../ui/card';
 import { ProductType, StoreType } from '@/types';
 import { sendEmail } from '@/lib/actions/email';
 import { sendNOSTRMessage } from '@/lib/actions/nostr';
+import { Checkbox } from "@/components/ui/checkbox";
+import { subscribeToSendy } from '@/lib/actions/sendy';
+import { toast } from '@/hooks/use-toast';
 
 type InformationProps = {
   store: StoreType;
@@ -37,19 +40,63 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store }: 
 
   const [variant, setVariant] = useState<'email' | 'pubkey'>('email');
   const [pubkey, setPubkey] = useState('');
+  const [newsletter, setNewsletter] = useState(false);
+
+  const getNewsletterEmail = () => {
+    return variant === 'email' ? email : '';
+  };
+  
+  const showNewsletterEmailField = newsletter && variant === 'pubkey';
 
   async function onSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
+  
+    try {
+      if (variant === 'email' && (!name || !email)) return;
+      if (variant === 'pubkey' && !pubkey) return;
+      if (newsletter && variant === 'pubkey' && !email) return;
+  
+      const id = await addCustomer({ 
+        name, 
+        email,
+        pubkey, 
+        store_id: String(store?.id), 
+        newsletter
+      });
 
-    if (variant === 'email' && (!name || !email)) return;
-    if (variant === 'pubkey' && !pubkey) return;
-
-    const id = await addCustomer({ name, email, pubkey, store_id: String(store?.id) });
-
-    onComplete(id);
-    onEmail(email);
-    onPubKey(pubkey);
+      // If user activated newsletter check-box send email to Sendy service
+      if (newsletter) {
+        try {
+          const result = await subscribeToSendy(email, name);
+          toast({
+            title: "¡Suscripción exitosa!",
+            description: "Te has suscrito correctamente al newsletter.",
+            variant: "default",
+          });
+        } catch (error) {
+          console.error('Error al suscribir al newsletter:', error);
+          toast({
+            title: "Error en la suscripción al newsletter",
+            description: "Hubo un problema técnico. Por favor intenta de nuevo más tarde.",
+            variant: "destructive",
+          });
+        }
+      }
+  
+      onComplete(id);
+      onEmail(email);
+      onPubKey(pubkey);
+    } catch (error) {
+      console.error('Error in form submission:', error);
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al procesar tu solicitud.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -81,23 +128,77 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store }: 
                 required
               />
             </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="newsletter" 
+                checked={newsletter}
+                onCheckedChange={(checked) => setNewsletter(checked as boolean)}
+              />
+              <label
+                htmlFor="newsletter"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Suscribirme al newsletter
+              </label>
+            </div>
           </>
         ) : (
-          <div className='grid gap-2'>
-            <Label htmlFor='pubkey'>Pubkey *</Label>
-            <Input
-              id='pubkey'
-              type='text'
-              placeholder='NIP-05, npub or hex format'
-              value={pubkey}
-              onChange={(e) => setPubkey(e.target.value)}
-              required
-            />
-          </div>
+          <>
+            <div className='grid gap-2'>
+              <Label htmlFor='pubkey'>Pubkey *</Label>
+              <Input
+                id='pubkey'
+                type='text'
+                placeholder='NIP-05, npub or hex format'
+                value={pubkey}
+                onChange={(e) => setPubkey(e.target.value)}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="newsletter" 
+                  checked={newsletter}
+                  onCheckedChange={(checked) => {
+                    setNewsletter(checked as boolean);
+                    if (!checked) {
+                      setEmail('');
+                    }
+                  }}
+                />
+                <label
+                  htmlFor="newsletter"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Suscribirme al newsletter
+                </label>
+              </div>
+              {/* Add email field if newsletter checkbox is activated */}
+              {newsletter && (
+                <div className='grid gap-2 mt-2'>
+                  <Label htmlFor='email'>Email para newsletter</Label>
+                  <Input
+                    id='email'
+                    type='email'
+                    placeholder='tu@email.com'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required={newsletter}
+                  />
+                </div>
+              )}
+            </div>
+          </>
         )}
         <Button
           className='w-full hover:bg-green-400'
-          disabled={(variant === 'email' ? !name || !email : !pubkey) || loading || disabled}
+          disabled={
+            (variant === 'email' ? !name || !email : !pubkey) || 
+            (newsletter && variant === 'pubkey' && !email) || 
+            loading || 
+            disabled
+          }
           type='submit'
         >
           Pagar {loading && <LoaderCircle className='size-8 animate-spin' />}
