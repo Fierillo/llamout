@@ -1,16 +1,16 @@
 export type SiteConfig = typeof siteConfig;
 
 const links = {
-  x: 'https://twitter.com/unllamas',
-  github: 'https://github.com/unllamas/llamout',
-  githubAccount: 'https://github.com/unllamas',
-  discord: 'https://discord.com/users/unllamas',
+  x: 'https://twitter.com/lacryptaok',
+  github: 'https://github.com/fierillo/llamout',
+  githubAccount: 'https://github.com/fierillo',
+  discord: 'https://discord.com/users/fierillo',
 };
 
 export const siteConfig = {
   name: 'Llamout',
-  description: 'An open source payment system built with Next and focused on Bitcoin.',
-  url: 'https://llamout.vercel.app/',
-  ogImage: 'https://llamout.vercel.app/opengraph-image.png',
+  description: '¡Reserva tu lugar en la mejor comunidad de Bitcoin de este lado de la galaxia!',
+  url: 'https://cowork.lacrypta.ar/',
+  ogImage: 'https://cowork.lacrypta.ar/opengraph-image.png',
   links,
 };
