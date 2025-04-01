@@ -12,6 +12,7 @@ import { CustomAccordion } from './custom-accordion';
 
 import { StoreType, ProductType } from '@/types';
 import { Skeleton } from '../ui/skeleton';
+import { calculatePriceInSAT } from '@/lib/actions/calculateSATS';
 
 export function CheckoutProvider({
   store,
@@ -27,7 +28,14 @@ export function CheckoutProvider({
   return (
     <div className='flex-1 flex flex-col md:flex-row'>
       {/* Data */}
-      <div className='flex flex-col w-full bg-foreground text-background'>
+      <div
+        className="flex flex-col w-full text-background"
+        style={{
+          backgroundImage: 'url(/images/rabbit_banner.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <div className='flex flex-row gap-4 w-full h-14 px-4'>
           <div className='flex items-center gap-4 w-full max-w-xl mx-auto'>
             {store?.website ? (
@@ -59,13 +67,13 @@ export function CheckoutProvider({
         </div>
         <div className='flex-1 flex flex-col gap-6 w-full max-w-md mx-auto px-4 py-8 md:py-12'>
           <div className='flex flex-col gap-6'>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 rounded-xl bg-black opacity-80 p-4'>
               <div className='flex justify-between items-center'>
                 <h1 className='font-semibold tracking-tighter text-balance'>{product?.name}</h1>
                 {/* {product?.variants?.length === 0 && ( */}
                 <p className='flex items-center text-lg tracking-tighter text-balance'>
-                  <SatoshiV2Icon className='w-4 h-4' />
-                  <span className='font-semibold'>{formatBigNumbers(Number(product?.price) * quantity)}</span>
+                  {/* <SatoshiV2Icon className='w-4 h-4' /> */}
+                  <span className='font-semibold'>{(product?.price).toLocaleString('es-ES')}</span>
                   <span className='ml-1 text-muted-foreground'>{product?.currency}</span>
                 </p>
                 {/* )} */}

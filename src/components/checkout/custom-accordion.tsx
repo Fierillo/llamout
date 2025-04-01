@@ -23,6 +23,7 @@ import { sendNOSTRMessage } from '@/lib/actions/nostr';
 import { Checkbox } from "@/components/ui/checkbox";
 import { subscribeToSendy } from '@/lib/actions/sendy';
 import { toast } from '@/hooks/use-toast';
+import { calculatePriceInSAT } from '@/lib/actions/calculateSATS';
 
 type InformationProps = {
   store: StoreType;
@@ -431,26 +432,46 @@ export function CustomAccordion(props: CustomAccordion) {
             onEmail={setEmail}
             onPubKey={setPubkey}
             onComplete={async (id) => {
-              const _id = await addOrder({
-                customer_id: id,
-                product_id: String(product?.id),
-                amount: price,
-                currency: product?.currency,
-                quantity,
-              });
-
-              setOrderId(_id);
-              handleComplete('information');
-
-              // General Payment
-              // TO-DO: Validate LUD16
-              const data = await generatePayment({
-                lightningAddress: store?.lnaddress,
-                amount: price,
-              });
-
-              setInvoice(data?.invoice?.pr);
-              setVerify(data?.invoice?.verify);
+              try {
+                const _id = await addOrder({
+                  customer_id: id,
+                  product_id: String(product?.id),
+                  amount: price,
+                  currency: 'ARS',
+                  quantity,
+                });
+            
+                setOrderId(_id);
+                handleComplete('information');
+            
+                // Calculate the price in SAT
+                let amountInSAT;
+                try {
+                  amountInSAT = await calculatePriceInSAT(price);
+                  console.log("Calculated amount in SAT:", amountInSAT);
+                  
+                  // Amount in SAT should be an integer
+                  amountInSAT = Math.round(amountInSAT);
+                } catch (error: any) {
+                  throw new Error("Error calculating price in SAT:", error);
+                }
+            
+                // Generate LN invoice
+                const data = await generatePayment({
+                  lightningAddress: store?.lnaddress,
+                  amount: amountInSAT,
+                });
+            
+                setInvoice(data?.invoice?.pr);
+                setVerify(data?.invoice?.verify);
+              } catch (error) {
+                console.error("Payment error:", error);
+                toast({
+                  title: "Error",
+                  description: "Ocurrió un error al procesar tu solicitud.",
+                  variant: "destructive",
+                });
+              }
             }}
           />
         </AccordionContent>

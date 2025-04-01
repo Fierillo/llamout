@@ -17,14 +17,14 @@ export const CHECKOUT = {
 };
 
 export const PRODUCT = {
-  id: 'Cowork ticket',
+  id: 'Rabbit hole ticket',
   // image: 4/3 aspect ratio
   image:
-    'images/banner2.jpeg',
-  name: `MARTES DE COWORKING 🌯`,
-  description: '¡Reserva tu silla junto a los bitcoiners mas picantes del país!',
-  price: 500,
+    '',
+  name: `RABBIT HOLE PARTY`,
+  description: '¡Reserva tu entrada para una fiesta EXCLUSIVA de la mejor comunidad Bitcoiner!',
+  price: 15000,
   // currency: only 'SAT'
-  currency: 'SAT',
+  currency: 'ARS',
   variants: null,
 };
