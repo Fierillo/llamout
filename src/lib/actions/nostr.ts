@@ -48,7 +48,7 @@ export async function sendNOSTRMessage(userPubKey: string, orderId: string): Pro
   // Normalize pubkey
   const normalizedPubkey = await normalizePubkey(userPubKey);
   // Create QR
-  const qrContent = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(orderId)}&size=200x200`;
+  const qrContent = `http://localhost:3000/qr/${encodeURIComponent(orderId)}`;
   const message = `
   ¡Tu ticket para el Martes de Cowork de La Crypta!
   \n
