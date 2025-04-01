@@ -4,9 +4,9 @@ import QRCode from 'qrcode';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const orderId = params.id;
+  const { id: orderId } = context.params;
 
   try {
     // Generate QR code
