@@ -6,8 +6,16 @@ export type ProductType = {
   description: string;
   price: number;
   currency: string;
-};
-
+  discounts: {
+    code: string;
+    description: string;
+    amount: number;
+    type: 'percentage' | 'fixed';
+    valid_until: string;
+    valid_from: string;
+    max_uses: number;
+  };
+}
 export type StoreType = {
   id?: string;
   website: string;

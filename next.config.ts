@@ -10,7 +10,11 @@ const nextConfig: NextConfig = {
     NEXT_NOSTR_PRIVATE_KEY: process.env.NOSTR_PRIVATE_KEY,
     NEXT_SENDY_URL: process.env.SENDY_URL,
     NEXT_SENDY_API_KEY: process.env.SENDY_API_KEY,
-    NEXT_SENDY_LIST_ID: process.env.SENDY_LIST_ID
+    NEXT_SENDY_LIST_ID: process.env.SENDY_LIST_ID,
+    NEXT_DISCOUNT_CODE1: process.env.DISCOUNT_CODE1,
+    NEXT_DISCOUNT_CODE2: process.env.DISCOUNT_CODE2,
+    NEXT_DISCOUNT_CODE3: process.env.DISCOUNT_CODE3,
+    NEXT_DISCOUNT_CODE4: process.env.DISCOUNT_CODE4
   },
   images: {
     remotePatterns: [

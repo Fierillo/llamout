@@ -334,10 +334,11 @@ interface CustomAccordion {
   product: ProductType;
   quantity: number;
   readOnly: boolean;
+  price: number;
 }
 
 export function CustomAccordion(props: CustomAccordion) {
-  const { store, product, quantity, readOnly } = props;
+  const { store, product, quantity, readOnly, price } = props;
 
   const [activeStep, setActiveStep] = useState<Step>(readOnly ? 'payment' : 'information');
   const [completedSteps, setCompletedSteps] = useState<Step[]>([]);
@@ -347,8 +348,6 @@ export function CustomAccordion(props: CustomAccordion) {
   const [verify, setVerify] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [pubkey, setPubkey] = useState<string>('');
-
-  const price = product?.price * quantity;
 
   useEffect(() => {
     const handlePaymentConfirmation = async (isPaid: boolean) => {

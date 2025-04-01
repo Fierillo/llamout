@@ -27,4 +27,42 @@ export const PRODUCT = {
   // currency: only 'SAT'
   currency: 'ARS',
   variants: null,
+  discounts: [
+    {
+      code: process.env.NEXT_DISCOUNT_CODE1,
+      description: '10% de descuento',
+      amount: 20,
+      type: 'percentage',
+      valid_until: '2025-04-10',
+      valid_from: '2025-04-01',
+      // max_uses: 0,
+    },
+    {
+      code: process.env.NEXT_DISCOUNT_CODE2,
+      description: '20% de descuento',
+      amount: 30,
+      type: 'percentage',
+      valid_until: '2025-04-10',
+      valid_from: '2025-04-01',
+      // max_uses: 0,
+    },
+    {
+      code: process.env.NEXT_DISCOUNT_CODE3,
+      description: '30% de descuento',
+      amount: 40,
+      type: 'percentage',
+      valid_until: '2025-04-10',
+      valid_from: '2025-04-01',
+      // max_uses: 0,
+    },
+    {
+      code: process.env.NEXT_DISCOUNT_CODE4,
+      description: 'Descuento especial',
+      amount: -20,
+      type: 'percentage',
+      valid_until: '2025-04-10',
+      valid_from: '2025-04-01',
+      // max_uses: 0,
+    }
+  ]
 };
