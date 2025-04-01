@@ -97,9 +97,9 @@ export function CheckoutProvider({
             <div className="flex flex-col gap-4 rounded-xl bg-black opacity-80 p-4">
               {/* Nombre del producto */}
               <div className="flex justify-between items-center">
-                <h1 className="font-semibold tracking-tighter text-balance">{product?.name}</h1>
+                <h1 className="font-bold text-xl tracking-tighter text-balance">{product?.name}</h1>
                 {/* Mostrar Precios */}
-                <div className="text-right">
+                <div className="text-right text-green-400">
                   {appliedDiscount && (
                     <p className="text-sm text-muted-foreground line-through">
                       {originalPriceARS.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}
@@ -111,7 +111,7 @@ export function CheckoutProvider({
                     </span>
                   </p>
                   {appliedDiscount && (
-                    <p className="text-xs text-green-400">
+                    <p className="text-xs text-orange-400">
                       Descuento: {appliedDiscount.code}{' '}
                       {appliedDiscount.type === 'percentage'
                         ? `(${appliedDiscount.amount}%)`
@@ -154,6 +154,7 @@ export function CheckoutProvider({
                       onClick={handleApplyDiscount}
                       disabled={isApplyingDiscount || !inputCode}
                       variant="secondary"
+                      className='hover:bg-yellow-500 hover:text-white'
                     >
                       {isApplyingDiscount ? (
                         <LoaderCircle className="animate-spin mr-2" size={16} />
