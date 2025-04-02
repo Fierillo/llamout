@@ -21,7 +21,7 @@ import { ProductType, StoreType } from '@/types';
 import { sendEmail } from '@/lib/actions/email';
 import { sendNOSTRMessage } from '@/lib/actions/nostr';
 import { Checkbox } from "@/components/ui/checkbox";
-import { subscribeToSendy } from '@/lib/actions/sendy';
+import { subscribeToSendy } from '@/lib/actions/newsletter';
 import { toast } from '@/hooks/use-toast';
 
 type InformationProps = {
@@ -298,21 +298,44 @@ export function Payment({ invoice, store }: PaymentProps) {
   );
 }
 
-export function Summary() {
+type SummaryProps = {
+  orderId: string;
+  store: StoreType;
+};
+
+export function Summary({ orderId, store }: SummaryProps) {
   return (
     <div className='flex flex-col gap-4'>
       <Card>
         <CardContent className='pt-6'>
           <div className='flex flex-col items-center gap-4'>
             <div className='flex justify-center items-center w-12 h-12 rounded-full bg-background'>
-              <Heart className='size-4 text-green-500' />
+              <Heart className='size-4 text-orange-500' />
             </div>
             <div className='flex flex-col items-center gap-2 text-center'>
               <h3 className='font-semibold text-xl tracking-tighter text-balance'>¡Pago exitoso!</h3>
               <p>
                 ¡Gracias por los sats! 🫡<br />
-                Revisa tu mail que ya te debe haber llegado el ticket.
+                Revisa tu mail (o mensaje privado en NOSTR) que ya te debe haber llegado el ticket.
               </p>
+            </div>
+          </div>
+        </CardContent>
+        <CardContent className='pt-6'>
+          <div className='flex flex-col items-center gap-4'>
+            <div className='text-center text-muted-foreground'>
+              ¡También podes guardar este QR!
+            </div>
+            <div className='flex justify-center items-center w-48 h-48 rounded-full bg-background'>
+              <QRCodeSVG
+                size={260}
+                value={orderId}
+                imageSettings={{ src: store?.image, height: 48, width: 48, excavate: true }}
+              />
+            </div>
+            <div className='text-center text-muted-foreground'>
+              O copiar y guardar este código: 
+              <br></br>{orderId}
             </div>
           </div>
         </CardContent>
@@ -482,7 +505,7 @@ export function CustomAccordion(props: CustomAccordion) {
           {/* {isCompleted('summary') && <span className='text-sm text-green-500'>Completed</span>} */}
         </AccordionTrigger>
         <AccordionContent>
-          <Summary />
+          <Summary orderId={orderId} store={store} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
