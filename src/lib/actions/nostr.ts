@@ -6,6 +6,9 @@ const RELAYS = [
   'wss://nostr.wine',
   'wss://purplepag.es',
   'wss://relay.damus.io',
+  'wss://nostrelites.org',
+  'wss://relay.hodl.ar',
+  'wss://relay.lawallet.ar'
 ];
 
 // Crash if there isn't NOSTR private key declared in .env
