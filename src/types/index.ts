@@ -6,7 +6,7 @@ export type ProductType = {
   description: string;
   price: number;
   currency: string;
-  discounts: {
+  discounts: Array<{
     code: string;
     description: string;
     amount: number;
@@ -14,7 +14,7 @@ export type ProductType = {
     valid_until: string;
     valid_from: string;
     max_uses: number;
-  };
+  }>;
 }
 export type StoreType = {
   id?: string;
