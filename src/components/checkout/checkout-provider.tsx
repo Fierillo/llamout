@@ -12,7 +12,12 @@ import { Button } from '../ui/button';
 import { LoaderCircle, Tag, XCircle } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { PRODUCT } from '@/mock/index'; // Importar PRODUCT
+import { PRODUCT } from '@/mock/index';
+import { init } from '@instantdb/react';
+
+const APP_ID = process.env.INSTANTDB_KEY || '';
+const db = init({ appId: APP_ID });
+const MAX_TICKETS = PRODUCT.quantity;
 
 export function CheckoutProvider({
   store,
@@ -24,9 +29,33 @@ export function CheckoutProvider({
   readOnly?: boolean;
 }) {
   const [quantity, setQuantity] = useState(1);
-
-  // Calcular precio original (base para el hook)
+  const [ticketsSoldOut, setTicketsSoldOut] = useState(false);
+  // Calcular precio original
   const originalPriceARS = (product?.price || 0) * quantity;
+
+  // Consulta específica para órdenes pagadas
+  const { data } = db.useQuery({
+    order: {
+      $: {
+        where: {
+          paid: true,
+        },
+      },
+    },
+  });
+
+  // Calcular tickets vendidos
+  const ticketsSold = data ? data.order.length : 0;
+  console.log('Tickets vendidos:', ticketsSold);
+
+  // Verificar si las entradas están agotadas
+  useEffect(() => {
+    if (ticketsSold >= MAX_TICKETS) {
+      setTicketsSoldOut(true);
+    } else {
+      setTicketsSoldOut(false);
+    }
+  }, [ticketsSold]);
 
   // Usar el hook de descuento con los descuentos de PRODUCT
   const {
@@ -51,6 +80,16 @@ export function CheckoutProvider({
       max_uses: number;
     }>
   );
+
+  // Si las entradas están agotadas, mostrar el cartel
+  if (ticketsSoldOut) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4 bg-black">
+        <h2 className="text-6xl font-dark-souls text-red-600">ENTRADAS AGOTADAS</h2>
+        <p className='text-2xl text-red-600 font-dark-souls'>No hay más entradas disponibles para este evento.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col md:flex-row">

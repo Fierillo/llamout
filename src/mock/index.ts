@@ -27,6 +27,7 @@ export const PRODUCT = {
   // currency: only 'SAT'
   currency: 'ARS',
   variants: null,
+  quantity: 30,
   discounts: [
     {
       code: process.env.NEXT_DISCOUNT_CODE1,

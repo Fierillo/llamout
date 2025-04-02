@@ -6,6 +6,20 @@ body {
   font-family: Inter, Helvetica, sans-serif;
 }
 
+@font-face {
+  font-family: 'Adobe Garamond Bold';
+  src: url('/fonts/Adobe-Garamond-Bold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dark Souls';
+  src: url('/fonts/Optimus-Princeps.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     /* Base */

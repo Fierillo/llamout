@@ -6,6 +6,7 @@ export type ProductType = {
   description: string;
   price: number;
   currency: string;
+  quantity: number;
   discounts: Array<{
     code: string;
     description: string;

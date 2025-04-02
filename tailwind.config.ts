@@ -14,6 +14,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'adobe-garamond-bold': ['Adobe Garamond Bold', 'serif'],
+        'dark-souls': ['Dark Souls', 'serif']
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
