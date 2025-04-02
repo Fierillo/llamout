@@ -8,7 +8,7 @@ const links = {
 };
 
 export const siteConfig = {
-  name: 'Llamout',
+  name: 'La Crypta',
   description: '¡Reserva tu lugar en la mejor comunidad de Bitcoin de este lado de la galaxia!',
   url: 'https://cowork.lacrypta.ar/',
   ogImage: 'https://cowork.lacrypta.ar/opengraph-image.png',
