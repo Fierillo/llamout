@@ -48,9 +48,9 @@ export async function sendNOSTRMessage(userPubKey: string, orderId: string): Pro
   // Normalize pubkey
   const normalizedPubkey = await normalizePubkey(userPubKey);
   // Create QR
-  const qrContent = `https://cowork.lacrypta.ar/qr/${encodeURIComponent(orderId)}`;
+  const qrContent = `https://rabbit.lacrypta.ar/qr/${encodeURIComponent(orderId)}`;
   const message = `
-  ¡Tu ticket para el Martes de Cowork de La Crypta!
+  🐇 ¡Tu ticket para THE RABBIT HOLE PARTY! 🐰
   \n
   🎟 Código de ticket: 
   ${orderId}
@@ -58,7 +58,7 @@ export async function sendNOSTRMessage(userPubKey: string, orderId: string): Pro
   🔍 Escanea este QR para el check-in:
   ${qrContent}
   \n
-  ¡Gracias por tu colaboración! 🫡`;
+  ¡Gracias por tu colaboración! 🫡🥕`;
 
   // Encrypt message
   const encryptedContent = await nip04.encrypt(decodedPrivateKey, normalizedPubkey, message);
