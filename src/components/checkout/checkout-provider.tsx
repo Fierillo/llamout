@@ -46,7 +46,6 @@ export function CheckoutProvider({
 
   // Calcular tickets vendidos
   const ticketsSold = data ? data.order.length : 0;
-  console.log('Tickets vendidos:', ticketsSold);
 
   // Verificar si las entradas están agotadas
   useEffect(() => {

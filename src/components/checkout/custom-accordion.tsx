@@ -447,7 +447,6 @@ export function CustomAccordion(props: CustomAccordion) {
                 let amountInSAT;
                 try {
                   amountInSAT = await calculatePriceInSAT(price);
-                  console.log("Calculated amount in SAT:", amountInSAT);
                   
                   // Amount in SAT should be an integer
                   amountInSAT = Math.round(amountInSAT);
