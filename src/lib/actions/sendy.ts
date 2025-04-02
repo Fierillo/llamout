@@ -30,7 +30,7 @@ interface SendySubscribeResponse {
         boolean: 'true'
       });
   
-      const response = await fetch(`${sendyUrl}/subscribe`, {
+      const response = await fetch(`${sendyUrl}/sendy/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
