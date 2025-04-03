@@ -113,7 +113,7 @@ export default function QRScanner({ onScanSuccess, onScanError }: QRScannerProps
   
   return (
     <div className="bg-card rounded-lg p-4 shadow-sm">
-      <h2 className="text-lg font-semibold mb-4">Escanear QR</h2>
+      <h2 className="text-lg text-center font-semibold mb-4">Escanear QR</h2>
       {!cameraActive ? activateCamera() : qrReader()}
     </div>
   );

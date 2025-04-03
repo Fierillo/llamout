@@ -1,5 +1,5 @@
 export const STORE = {
-  id: 'company-1',
+  id: 'La Crypta',
   // image: show image 48x48
   image: 'images/logo.png',
   name: 'La Crypta |🇦🇷',

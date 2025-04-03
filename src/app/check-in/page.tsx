@@ -2,9 +2,12 @@
 
 import { init } from '@instantdb/react';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import QRScanner from '@/components/ui/QRscanner';
+import { sendEmail } from '@/lib/actions/email';
+import { sendNOSTRMessage } from '@/lib/actions/nostr';
 
 const APP_ID = process.env.INSTANTDB_KEY || '';
 const db = init({ appId: APP_ID });
@@ -20,6 +23,7 @@ export default function Page() {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [isResending, setIsResending] = useState(false);
 
   const handleCheckIn = async (orderId: string) => {
     setScanError('');
@@ -91,10 +95,28 @@ export default function Page() {
     );
   }
 
+  const handleResend = (id: string) => {
+    setIsResending(true);
+    resendTicket(id);
+    setTimeout(() => setIsResending(false), 2100);
+  };
+
   const { order, customer } = data;
+  // la funcion revisa si el cliente dejo email o pubkey
+  async function resendTicket(orderId: string) {
+    const orderData = order.find((o: any) => o.id === orderId);
+    const customerData = customer.find((c: any) => c.id === orderData?.customer_id);
+    if (customerData?.email) {
+      await sendEmail(customerData.email, orderId)
+    } else if (customerData?.pubkey) {
+      await sendNOSTRMessage(customerData.pubkey, orderId)
+    } else {
+      console.error('No se encontró email ni pubkey para el cliente');
+    }
+  }
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 bg-black">
       {/* Sección de check-in */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Lector QR */}
@@ -104,14 +126,14 @@ export default function Page() {
         />
         {/* Entrada manual */}
         <div className="bg-card rounded-lg p-4 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4">Check-in Manual</h2>
+          <h2 className="text-lg text-center font-semibold mb-4">Check-in Manual</h2>
           <div className="flex gap-2">
             <input
               type="text"
               value={manualId}
               onChange={(e) => setManualId(e.target.value)}
               placeholder="Ingresar ID de orden"
-              className="flex-1 p-2 border rounded"
+              className="flex-1 p-2 border rounded bg-black text-white"
             />
             <Button onClick={() => handleCheckIn(manualId)} disabled={!manualId}>
               Validar
@@ -122,17 +144,17 @@ export default function Page() {
 
       {/* Retroalimentación */}
       {scanResult && (
-        <div className="p-4 bg-green-50 rounded-lg">
+        <div className="p-4 bg-green-200 rounded-lg">
           ✓ Check-in exitoso para orden: {scanResult}
         </div>
       )}
       {scanError && (
-        <div className="p-4 bg-red-50 rounded-lg text-red-600">
+        <div className="p-4 bg-red-200 rounded-lg text-red-600">
           ✗ {scanError}
         </div>
       )}
       {/* Tabla */}
-      <div className="border rounded-lg overflow-hidden shadow-sm">
+      <div className="border rounded-lg overflow-hidden shadow-sm bg-white">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-muted">
@@ -142,6 +164,7 @@ export default function Page() {
                 <th className="p-3 text-left">Email/Pubkey</th>
                 <th className="p-3 text-center">Pago</th>
                 <th className="p-3 text-center">Check-in</th>
+                <th className="p-3 text-center">¿Reenviar?</th>
               </tr>
             </thead>
             <tbody>
@@ -159,9 +182,22 @@ export default function Page() {
                         minute: '2-digit'
                       })}
                     </td>
-                    <td className="p-3">{customerData?.email || `NOSTR: ${customerData?.pubkey}`}</td>
+                    <td className="p-3">{customerData?.email || <p className="text-purple-500">NOSTR: {customerData?.pubkey}</p>}</td>
                     <td className="p-3 text-center">{theOrder.paid ? 'SI' : 'NO'}</td>
-                    <td className="p-3 text-center text-2xl">{theOrder.checkedIn ? '✅' : '❌'}</td>
+                    <td className="p-3 text-center text-xl">{theOrder.checkedIn ? '✅' : '❌'}</td>
+                    <td className="p-3 text-center text-2xl">
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleResend(theOrder.id)}
+                        disabled={theOrder.checkedIn || !theOrder.paid || isResending}
+                      >
+                        {isResending? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <span className="text-4xl text-blue-500 hover:text-white hover:bg-blue-500">↻</span>
+                        )}
+                      </Button>
+                    </td>
                   </tr>
                 );
               })}
