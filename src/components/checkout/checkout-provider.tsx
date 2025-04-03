@@ -154,7 +154,7 @@ export function CheckoutProvider({
                       {appliedDiscount.type === 'percentage'
                         ? `(${appliedDiscount.amount}%)`
                         : `(-${discountAmountARS.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })})`}
-                    </p>
+                    </p> 
                   )}
                 </div>
               </div>
@@ -213,7 +213,9 @@ export function CheckoutProvider({
                     </Button>
                   )}
                 </div>
-                {discountError && <p className="text-sm text-red-500">{discountError}</p>}
+                {appliedDiscount
+                ? (<p className='text-yellow-500'>{appliedDiscount.description}</p>) 
+                : (discountError && <p className="text-sm text-red-500">{discountError}</p>)}
               </div>
             )}
           </div>

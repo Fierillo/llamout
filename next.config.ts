@@ -14,7 +14,8 @@ const nextConfig: NextConfig = {
     NEXT_DISCOUNT_CODE1: process.env.DISCOUNT_CODE1,
     NEXT_DISCOUNT_CODE2: process.env.DISCOUNT_CODE2,
     NEXT_DISCOUNT_CODE3: process.env.DISCOUNT_CODE3,
-    NEXT_DISCOUNT_CODE4: process.env.DISCOUNT_CODE4
+    NEXT_DISCOUNT_CODE4: process.env.DISCOUNT_CODE4,
+    NEXT_DISCOUNT_CODE5: process.env.DISCOUNT_CODE5,
   },
   images: {
     remotePatterns: [

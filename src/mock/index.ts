@@ -31,7 +31,7 @@ export const PRODUCT = {
   discounts: [
     {
       code: process.env.NEXT_DISCOUNT_CODE1,
-      description: '10% de descuento',
+      description: 'Para los guerreros de ACERO',
       amount: 20,
       type: 'percentage',
       valid_until: '2025-04-10',
@@ -40,7 +40,7 @@ export const PRODUCT = {
     },
     {
       code: process.env.NEXT_DISCOUNT_CODE2,
-      description: '20% de descuento',
+      description: 'Para los guerreros de PLATA',
       amount: 30,
       type: 'percentage',
       valid_until: '2025-04-10',
@@ -49,7 +49,7 @@ export const PRODUCT = {
     },
     {
       code: process.env.NEXT_DISCOUNT_CODE3,
-      description: '30% de descuento',
+      description: 'Para los ANIMALES de esta hermosa jungla',
       amount: 40,
       type: 'percentage',
       valid_until: '2025-04-10',
@@ -58,8 +58,17 @@ export const PRODUCT = {
     },
     {
       code: process.env.NEXT_DISCOUNT_CODE4,
-      description: 'Descuento especial',
+      description: '"Descuento" especial ',
       amount: -20,
+      type: 'percentage',
+      valid_until: '2025-04-10',
+      valid_from: '2025-04-01',
+      // max_uses: 0,
+    },
+    {
+      code: process.env.NEXT_DISCOUNT_CODE5,
+      description: '¡Un poco de amor para la gente de Liberland!',
+      amount: 10,
       type: 'percentage',
       valid_until: '2025-04-10',
       valid_from: '2025-04-01',
