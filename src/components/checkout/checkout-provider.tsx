@@ -32,6 +32,7 @@ export function CheckoutProvider({
   const [ticketsSoldOut, setTicketsSoldOut] = useState(false);
   // Calcular precio original
   const originalPriceARS = (product?.price || 0) * quantity;
+  const [isSubmited, setIsSubmited] = useState(false); 
 
   // Consulta específica para órdenes pagadas
   const { data } = db.useQuery({
@@ -89,6 +90,10 @@ export function CheckoutProvider({
       </div>
     );
   }
+
+  const handleSubmited = () => {
+    setIsSubmited(true);
+  };
 
   return (
     <div className="flex-1 flex flex-col md:flex-row">
@@ -150,9 +155,9 @@ export function CheckoutProvider({
                   </p>
                   {appliedDiscount && (
                     <p className="text-xs text-orange-400">
-                      Descuento: {appliedDiscount.code}{' '}
+                      ¡Descuento del
                       {appliedDiscount.type === 'percentage'
-                        ? `(${appliedDiscount.amount}%)`
+                        ? ` ${appliedDiscount.amount}%!`
                         : `(-${discountAmountARS.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })})`}
                     </p> 
                   )}
@@ -183,14 +188,14 @@ export function CheckoutProvider({
                     placeholder="Ej: RABBIT"
                     value={inputCode}
                     onChange={(e) => setInputCode(e.target.value)}
-                    disabled={isApplyingDiscount || !!appliedDiscount}
+                    disabled={isApplyingDiscount || !!appliedDiscount || isSubmited}
                     className="text-black"
                   />
                   {!appliedDiscount ? (
                     <Button
                       type="button"
                       onClick={handleApplyDiscount}
-                      disabled={isApplyingDiscount || !inputCode}
+                      disabled={isApplyingDiscount || !inputCode || isSubmited}
                       variant="secondary"
                       className='hover:bg-yellow-500 hover:text-white'
                     >
@@ -205,6 +210,7 @@ export function CheckoutProvider({
                     <Button
                       type="button"
                       onClick={clearDiscount}
+                      disabled={isSubmited}
                       variant="ghost"
                       size="icon"
                       title="Quitar descuento"
@@ -231,6 +237,7 @@ export function CheckoutProvider({
             store={store} 
             product={product} 
             price={finalPriceARS}
+            onSubmited={handleSubmited}
           />
         </div>
         <Footer />

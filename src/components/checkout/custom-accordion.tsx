@@ -31,9 +31,10 @@ type InformationProps = {
   onComplete: (id: any) => void;
   onEmail: (email: string) => void;
   onPubKey: (pubkey: string) => void;
+  onSubmited: (value: boolean) => void;
 };
 
-export function Information({ onComplete, onEmail, onPubKey, disabled, store }: InformationProps) {
+export function Information({ onComplete, onEmail, onPubKey, disabled, store, onSubmited }: InformationProps) {
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState('');
@@ -52,6 +53,7 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store }: 
   async function onSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
+    onSubmited(true);
   
     try {
       if (variant === 'email' && (!name || !email)) return;
@@ -84,7 +86,6 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store }: 
           });
         }
       }
-  
       onComplete(id);
       onEmail(email);
       onPubKey(pubkey);
@@ -358,11 +359,10 @@ interface CustomAccordion {
   quantity: number;
   readOnly: boolean;
   price: number;
+  onSubmited: (value: boolean) => void;
 }
 
-export function CustomAccordion(props: CustomAccordion) {
-  const { store, product, quantity, readOnly, price } = props;
-
+export function CustomAccordion({ store, product, quantity, readOnly, price, onSubmited }: CustomAccordion) {
   const [activeStep, setActiveStep] = useState<Step>(readOnly ? 'payment' : 'information');
   const [completedSteps, setCompletedSteps] = useState<Step[]>([]);
 
@@ -436,7 +436,7 @@ export function CustomAccordion(props: CustomAccordion) {
   };
 
   return (
-    <Accordion type='single' value={activeStep} className='w-full max-w-sm' {...props}>
+    <Accordion type='single' value={activeStep} className='w-full max-w-sm'>
       <AccordionItem value='information'>
         <AccordionTrigger className='flex justify-between'>
           <div className='flex items-center gap-2'>
@@ -494,6 +494,7 @@ export function CustomAccordion(props: CustomAccordion) {
                 });
               }
             }}
+            onSubmited={onSubmited}
           />
         </AccordionContent>
       </AccordionItem>
