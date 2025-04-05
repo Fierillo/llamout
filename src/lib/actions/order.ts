@@ -10,10 +10,11 @@ interface AddOrder {
   amount: number;
   currency: string;
   quantity: number;
+  discountCode: string | null;
 }
 
 export async function addOrder(props: AddOrder): Promise<string> {
-  const { customer_id, product_id, amount, currency, quantity } = props;
+  const { customer_id, product_id, amount, currency, quantity, discountCode } = props;
 
   // TO-DO
   // validate customer_id && product_id
@@ -24,7 +25,6 @@ export async function addOrder(props: AddOrder): Promise<string> {
     db.tx.order[newId].update({
       customer_id,
       product_id,
-
       amount: amount ?? null,
       quantity: quantity ?? null,
       currency: currency ?? null,
@@ -32,6 +32,7 @@ export async function addOrder(props: AddOrder): Promise<string> {
       checkedIn: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
+      discountCode: discountCode ?? null,
     }),
   );
 

@@ -360,9 +360,10 @@ interface CustomAccordion {
   readOnly: boolean;
   price: number;
   onSubmited: (value: boolean) => void;
+  discountCode?: string | null;
 }
 
-export function CustomAccordion({ store, product, quantity, readOnly, price, onSubmited }: CustomAccordion) {
+export function CustomAccordion({ store, product, quantity, readOnly, price, onSubmited, discountCode }: CustomAccordion) {
   const [activeStep, setActiveStep] = useState<Step>(readOnly ? 'payment' : 'information');
   const [completedSteps, setCompletedSteps] = useState<Step[]>([]);
 
@@ -459,8 +460,9 @@ export function CustomAccordion({ store, product, quantity, readOnly, price, onS
                   customer_id: id,
                   product_id: String(product?.id),
                   amount: price,
-                  currency: 'ARS',
+                  currency: product?.currency,
                   quantity,
+                  discountCode: discountCode ?? null,
                 });
             
                 setOrderId(_id);

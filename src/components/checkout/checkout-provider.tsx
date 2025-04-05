@@ -238,6 +238,7 @@ export function CheckoutProvider({
             product={product} 
             price={finalPriceARS}
             onSubmited={handleSubmited}
+            discountCode={appliedDiscount ? inputCode : null}
           />
         </div>
         <Footer />
