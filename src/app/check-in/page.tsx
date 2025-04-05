@@ -25,31 +25,6 @@ export default function Page() {
   const [authError, setAuthError] = useState('');
   const [isResending, setIsResending] = useState(false);
 
-  const handleCheckIn = async (orderId: string) => {
-    setScanError('');
-    if (!data || !data.order) {
-      setScanError('Datos no cargados correctamente');
-      return;
-    }
-    const orderExists = data.order.some((o: any) => o.id === orderId);
-    if (!orderExists) {
-      setScanError('ID de orden inválido');
-      return;
-    }
-    try {
-      await db.transact(
-        db.tx.order[orderId].update({
-          checkedIn: true,
-          updatedAt: Date.now()
-        })
-      );
-      setScanResult(orderId);
-      setManualId('');
-    } catch (error) {
-      setScanError('Error al actualizar el check-in');
-    }
-  };
-
   const handlePasswordSubmit = () => {
     if (password === CORRECT_PASSWORD) {
       setIsAuthenticated(true);
@@ -94,6 +69,36 @@ export default function Page() {
       </div>
     );
   }
+  
+  const handleCheckIn = async (orderId: string) => {
+    setScanError('');
+    if (!data || !data.order) {
+      setScanError('Datos no cargados correctamente');
+      return;
+    }
+    const orderExists = data.order.some((o: any) => o.id === orderId);
+    if (!orderExists) {
+      setScanError('ID de orden inválido');
+      return;
+    }
+    try {
+      await db.transact(
+        db.tx.order[orderId].update({
+          checkedIn: true,
+          updatedAt: Date.now()
+        })
+      );
+      setScanResult(orderId);
+      setManualId('');
+    } catch (error) {
+      setScanError('Error al actualizar el check-in');
+    }
+  };
+
+  const { order, customer } = data;
+  const totalOrders = order.length;
+  const paidOrders = order.filter((o: any) => o.paid).length;
+  const checkedInOrders = order.filter((o: any) => o.checkedIn).length;
 
   const handleResend = (id: string) => {
     setIsResending(true);
@@ -101,7 +106,6 @@ export default function Page() {
     setTimeout(() => setIsResending(false), 2100);
   };
 
-  const { order, customer } = data;
   // la funcion revisa si el cliente dejo email o pubkey
   async function resendTicket(orderId: string) {
     const orderData = order.find((o: any) => o.id === orderId);
@@ -162,8 +166,9 @@ export default function Page() {
                 <th className="p-3 text-left">ID</th>
                 <th className="p-3 text-left">Fecha</th>
                 <th className="p-3 text-left">Email/Pubkey</th>
-                <th className="p-3 text-center">Pago</th>
-                <th className="p-3 text-center">Check-in</th>
+                <th className="p-3 text-left">Código</th>
+                <th className="p-3 text-center">¿Pagó? ({paidOrders}/{totalOrders})</th>
+                <th className="p-3 text-center">Check-in ({checkedInOrders}/{totalOrders})</th>
                 <th className="p-3 text-center">¿Reenviar?</th>
               </tr>
             </thead>
@@ -172,7 +177,17 @@ export default function Page() {
                 const customerData = customer.find((c: any) => c.id === theOrder.customer_id);
                 return (
                   <tr key={theOrder.id} className="border-t">
-                    <td className="p-3 text-sm font-mono">{theOrder.id}</td>
+                    <td
+                      className="p-3 text-sm font-mono max-w-[200px] truncate cursor-pointer"
+                      onClick={() => {
+                        const text = theOrder.id;
+                        navigator.clipboard.writeText(text);
+                        alert("Texto copiado al portapapeles");
+                      }}
+                      title="Haz clic para copiar"
+                    >
+                      {theOrder.id}
+                    </td>
                     <td className="p-3">
                       {new Date(theOrder.createdAt).toLocaleDateString('es-ES', {
                         day: '2-digit',
@@ -182,7 +197,18 @@ export default function Page() {
                         minute: '2-digit'
                       })}
                     </td>
-                    <td className="p-3">{customerData?.email || <p className="text-purple-500">NOSTR: {customerData?.pubkey}</p>}</td>
+                    <td
+                      className="p-3 max-w-[200px] truncate cursor-pointer"
+                      onClick={() => {
+                        const texto = customerData?.email || customerData?.pubkey;
+                        navigator.clipboard.writeText(texto);
+                        alert("Texto copiado al portapapeles");
+                      }}
+                      title="Haz clic para copiar"
+                    >
+                      {customerData?.email || <p className="text-purple-500 truncate">NOSTR: {customerData?.pubkey}</p>}
+                    </td>
+                    <td className="p-3">{theOrder.discountCode}</td>
                     <td className="p-3 text-center">{theOrder.paid ? 'SI' : 'NO'}</td>
                     <td className="p-3 text-center text-xl">{theOrder.checkedIn ? '✅' : '❌'}</td>
                     <td className="p-3 text-center text-2xl">

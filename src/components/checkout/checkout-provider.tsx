@@ -57,46 +57,16 @@ export function CheckoutProvider({
             )}
           </div>
         </div>
-        <div className='flex-1 flex flex-col gap-6 w-full max-w-md mx-auto px-4 py-8 md:py-12'>
-          <div className='flex flex-col gap-6'>
-            <div className='flex flex-col gap-4'>
-              <div className='flex justify-between items-center'>
-                <h1 className='font-semibold tracking-tighter text-balance'>{product?.name}</h1>
-                {/* {product?.variants?.length === 0 && ( */}
-                <p className='flex items-center text-lg tracking-tighter text-balance'>
-                  <SatoshiV2Icon className='w-4 h-4' />
-                  <span className='font-semibold'>{formatBigNumbers(Number(product?.price) * quantity)}</span>
-                  <span className='ml-1 text-muted-foreground'>{product?.currency}</span>
-                </p>
-                {/* )} */}
-                {/* {product?.variants?.length === 0 && (
-                    <div className='flex items-center gap-4'>
-                      <Button
-                        size='icon'
-                        variant={quantity <= 1 || disabled ? 'ghost' : 'default'}
-                        disabled={quantity <= 1 || disabled}
-                        onClick={() => {
-                          if (!disabled) setQuantity(quantity - 1);
-                        }}
-                      >
-                        <Minus />
-                      </Button>
-                      <p className='min-w-10 text-center text-md font-semibold'>
-                        <span className='text-xs text-muted-foreground mr-1'>x</span>
-                        {quantity}
-                      </p>
-                      <Button
-                        size='icon'
-                        variant={disabled ? 'ghost' : 'default'}
-                        disabled={disabled}
-                        onClick={() => {
-                          if (!disabled) setQuantity(quantity + 1);
-                        }}
-                      >
-                        <Plus />
-                      </Button>
-                    </div>
-                  )} */}
+        <div className="flex-1 flex flex-col gap-6 w-full max-w-md mx-auto px-4 py-8 md:py-12">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 rounded-xl bg-black opacity-80 p-4">
+              {/* Nombre del producto */}
+              <div className="flex justify-between items-center">
+                <h1 className="font-bold text-xl tracking-tighter text-balance">{product?.name}</h1>
+                {/* Mostrar Precios */}
+                <div className="text-right text-xl font-bold text-green-400">
+                  {product?.price.toLocaleString('en-US')} {product?.currency}
+                </div>
               </div>
               {readOnly && !product?.image && <Skeleton className='w-full h-[280px] bg-gray-200 rounded-xl' />}
               {product?.image && (
