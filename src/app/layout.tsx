@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   keywords: ['nextjs', 'react', 'payment', 'checkout', 'lightning network', 'bitcoin'],
   authors: [
     {
-      name: 'unllamas',
-      url: 'https://www.jonallamas.com',
+      name: 'La Crypta',
+      url: 'https://www.lacrypta.ar',
     },
   ],
-  creator: 'unllamas',
+  creator: 'La Crypta',
   openGraph: {
     type: 'website',
     locale: 'es_ES',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [`${siteConfig.url}/og.jpg`],
-    creator: '@unllamas',
+    creator: '@lacryptaok',
   },
   icons: {
     icon: '/icon.png',
