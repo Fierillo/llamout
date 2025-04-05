@@ -145,12 +145,12 @@ export function CheckoutProvider({
                 <div className="text-right text-green-400">
                   {appliedDiscount && (
                     <p className="text-sm text-muted-foreground line-through">
-                      {originalPriceARS.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}
+                      {originalPriceARS.toLocaleString('en-US')} {product?.currency}
                     </p>
                   )}
                   <p className="flex items-center justify-end text-lg tracking-tighter text-balance">
                     <span className="font-semibold">
-                      {finalPriceARS.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}
+                      {finalPriceARS.toLocaleString('en-US')} {product?.currency}
                     </span>
                   </p>
                   {appliedDiscount && (
