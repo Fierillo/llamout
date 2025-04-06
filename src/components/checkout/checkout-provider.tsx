@@ -30,11 +30,10 @@ export function CheckoutProvider({
 }) {
   const [quantity, setQuantity] = useState(1);
   const [ticketsSoldOut, setTicketsSoldOut] = useState(false);
-  // Calcular precio original
   const originalPriceARS = (product?.price || 0) * quantity;
   const [isSubmited, setIsSubmited] = useState(false); 
 
-  // Consulta específica para órdenes pagadas
+  // Get all the paid orders
   const { data } = db.useQuery({
     order: {
       $: {
@@ -45,10 +44,10 @@ export function CheckoutProvider({
     },
   });
 
-  // Calcular tickets vendidos
+  // Sum the quantity of all paid orders
   const ticketsSold = data ? data.order.length : 0;
 
-  // Verificar si las entradas están agotadas
+  // Triggers when ticket quantity reaches the limit
   useEffect(() => {
     if (ticketsSold >= MAX_TICKETS) {
       setTicketsSoldOut(true);
@@ -57,7 +56,7 @@ export function CheckoutProvider({
     }
   }, [ticketsSold]);
 
-  // Usar el hook de descuento con los descuentos de PRODUCT
+  // Hook to handle discount codes
   const {
     inputCode,
     setInputCode,
@@ -81,7 +80,7 @@ export function CheckoutProvider({
     }>
   );
 
-  // Si las entradas están agotadas, mostrar el cartel
+  // If tickets are sold out, show a message, disabling the checkout
   if (ticketsSoldOut) {
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4 bg-black">
@@ -91,6 +90,7 @@ export function CheckoutProvider({
     );
   }
 
+  // Set submitted state to disable discount code input
   const handleSubmited = () => {
     setIsSubmited(true);
   };
@@ -138,10 +138,10 @@ export function CheckoutProvider({
         <div className="flex-1 flex flex-col gap-6 w-full max-w-md mx-auto px-4 py-8 md:py-12">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4 rounded-xl bg-black opacity-80 p-4">
-              {/* Nombre del producto */}
+              {/* Product's name */}
               <div className="flex justify-between items-center">
                 <h1 className="font-bold text-xl tracking-tighter text-balance">{product?.name}</h1>
-                {/* Mostrar Precios */}
+                {/* Product's price */}
                 <div className="text-right text-green-400">
                   {appliedDiscount && (
                     <p className="text-sm text-muted-foreground line-through">
@@ -177,7 +177,7 @@ export function CheckoutProvider({
                 </div>
               )}
             </div>
-            {/* Sección Código de Descuento */}
+            {/* Discount code */}
             {!readOnly && (
               <div className="flex flex-col gap-2 rounded-xl bg-black opacity-80 p-4">
                 <Label htmlFor="discount-code">¿Tienes un código de descuento?</Label>
@@ -228,7 +228,7 @@ export function CheckoutProvider({
         </div>
       </div>
 
-      {/* Content */}
+      {/* Form */}
       <div className="flex flex-col justify-center items-center w-full">
         <div className="flex-1 flex w-full max-w-md h-full px-4 py-8 md:py-24">
           <CustomAccordion 
