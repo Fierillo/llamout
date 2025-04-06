@@ -11,7 +11,6 @@ import { sendNOSTRMessage } from '@/lib/actions/nostr';
 
 const APP_ID = process.env.INSTANTDB_KEY || '';
 const db = init({ appId: APP_ID });
-
 const CORRECT_PASSWORD = process.env.NEXT_CHECKIN_PASSWORD || 'gg';
 
 export default function Page() {
@@ -25,6 +24,7 @@ export default function Page() {
   const [authError, setAuthError] = useState('');
   const [isResending, setIsResending] = useState(false);
 
+  // Handle password submission
   const handlePasswordSubmit = () => {
     if (password === CORRECT_PASSWORD) {
       setIsAuthenticated(true);
@@ -58,6 +58,7 @@ export default function Page() {
   // Loading screen
   if (isLoading) return <div className="p-4">Cargando...</div>;
 
+  // Set error screen if there's an error in the initial query
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4">
@@ -70,17 +71,31 @@ export default function Page() {
     );
   }
   
+  // Start of check-in process
   const handleCheckIn = async (orderId: string) => {
     setScanError('');
+    // Check if orderId is empty
     if (!data || !data.order) {
       setScanError('Datos no cargados correctamente');
       return;
     }
-    const orderExists = data.order.some((o: any) => o.id === orderId);
-    if (!orderExists) {
+    // Check if orderId is valid
+    const order = data.order.find((o: any) => o.id === orderId);
+    if (!order) {
       setScanError('ID de orden inválido');
       return;
     }
+    // Check if orderId is paid
+    if (!order.paid) {
+      setScanError('La orden no está pagada');
+      return;
+    }
+    // Check if orderId is already checked in
+    if (order.checkedIn) {
+      setScanError('La orden ya fue registrada');
+      return;
+    }
+    // If all checks pass, proceed with check-in
     try {
       await db.transact(
         db.tx.order[orderId].update({
@@ -100,13 +115,14 @@ export default function Page() {
   const paidOrders = order.filter((o: any) => o.paid).length;
   const checkedInOrders = order.filter((o: any) => o.checkedIn).length;
 
+  // Set timeout to reset the resend button
   const handleResend = (id: string) => {
     setIsResending(true);
     resendTicket(id);
     setTimeout(() => setIsResending(false), 2100);
   };
 
-  // la funcion revisa si el cliente dejo email o pubkey
+  // Send email or NOSTR message
   async function resendTicket(orderId: string) {
     const orderData = order.find((o: any) => o.id === orderId);
     const customerData = customer.find((c: any) => c.id === orderData?.customer_id);
@@ -121,14 +137,14 @@ export default function Page() {
 
   return (
     <div className="p-4 space-y-6 bg-black">
-      {/* Sección de check-in */}
+      {/* Check-in */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Lector QR */}
+        {/* QR reader */}
         <QRScanner
           onScanSuccess={(result) => handleCheckIn(result)}
           onScanError={(error) => setScanError(error)}
         />
-        {/* Entrada manual */}
+        {/* Manual entry */}
         <div className="bg-card rounded-lg p-4 shadow-sm">
           <h2 className="text-lg text-center font-semibold mb-4">Check-in Manual</h2>
           <div className="flex gap-2">
@@ -146,7 +162,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Retroalimentación */}
+      {/* Feedback */}
       {scanResult && (
         <div className="p-4 bg-green-200 rounded-lg">
           ✓ Check-in exitoso para orden: {scanResult}
@@ -157,7 +173,7 @@ export default function Page() {
           ✗ {scanError}
         </div>
       )}
-      {/* Tabla */}
+      {/* Table */}
       <div className="border rounded-lg overflow-hidden shadow-sm bg-white">
         <div className="overflow-x-auto">
           <table className="w-full">
