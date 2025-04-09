@@ -14,6 +14,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { PRODUCT } from '@/mock/index';
 import { init } from '@instantdb/react';
+import { subscribeToSendy } from '@/lib/actions/newsletter';
 
 const APP_ID = process.env.INSTANTDB_KEY || '';
 const db = init({ appId: APP_ID });
@@ -31,7 +32,10 @@ export function CheckoutProvider({
   const [quantity, setQuantity] = useState(1);
   const [ticketsSoldOut, setTicketsSoldOut] = useState(false);
   const originalPriceARS = (product?.price || 0) * quantity;
-  const [isSubmited, setIsSubmited] = useState(false); 
+  const [isSubmited, setIsSubmited] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [error, setError] = useState('');
 
   // Get all the paid orders
   const { data } = db.useQuery({
@@ -80,12 +84,53 @@ export function CheckoutProvider({
     }>
   );
 
+  // Handle suscription to the waitlist
+  const handleSubscription = async () => {
+    if (isSubscribed) return;
+
+    if (!email) {
+      setError('Por favor, ingresa un email válido');
+      return;
+    }
+
+    try {
+      await subscribeToSendy(email, '', process.env.NEXT_SENDY_WAITLIST_ID || '');
+      setIsSubscribed(true);
+      setError('');
+    } catch (err) {
+      setError('Error al suscribirse. Intenta de nuevo.');
+    }
+  };
+
   // If tickets are sold out, show a message, disabling the checkout
   if (ticketsSoldOut) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen gap-4 bg-black">
+      <div className="flex flex-col items-center justify-center text-center h-screen gap-8 bg-black">
         <h2 className="text-6xl font-dark-souls text-red-600">ENTRADAS AGOTADAS</h2>
         <p className='text-2xl text-red-600 font-dark-souls'>No hay más entradas disponibles para este evento.</p>
+        <Input
+          id="waitlist field"
+          type="email"
+          placeholder="Ingresa tu mail"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value)
+            setError('')
+          }}
+          disabled={isSubscribed}
+          className="bg-black text-red-600 text-center placeholder-red-600 border-0 border-b-2 border-red-600 focus:outline-none focus:border-black focus:bg-black w-64 py-2"
+        />
+        <Button 
+          type="button"
+          onClick={() => handleSubscription()}
+          variant="secondary"
+          disabled={isSubscribed}
+          className={`border border-red-600 transition-colors duration-500
+            ${isSubscribed ? 'bg-red-600 text-black opacity-100' : 'bg-black text-red-600 hover:bg-red-600 hover:text-black'}`}
+        >
+          {isSubscribed ? '¡Suscripto, Gracias!' : 'Notificarme para el próximo evento'}
+        </Button>
+        {error && <p className="text-white text-sm">{error}</p>}
       </div>
     );
   }
@@ -239,6 +284,7 @@ export function CheckoutProvider({
             price={finalPriceARS}
             onSubmited={handleSubmited}
             discountCode={appliedDiscount ? inputCode : null}
+            ticketsSoldOut={ticketsSoldOut}
           />
         </div>
         <Footer />

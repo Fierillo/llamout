@@ -32,9 +32,10 @@ type InformationProps = {
   onEmail: (email: string) => void;
   onPubKey: (pubkey: string) => void;
   onSubmited: (value: boolean) => void;
+  ticketsSoldOut: boolean;
 };
 
-export function Information({ onComplete, onEmail, onPubKey, disabled, store, onSubmited }: InformationProps) {
+export function Information({ onComplete, onEmail, onPubKey, disabled, store, onSubmited, ticketsSoldOut }: InformationProps) {
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState('');
@@ -71,7 +72,7 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store, on
       // If user activated newsletter check-box send email to Sendy service
       if (newsletter) {
         try {
-          const result = await subscribeToSendy(email, name);
+          const result = await subscribeToSendy(email, name, process.env.NEXT_SENDY_LIST_ID || '');
           toast({
             title: "¡Suscripción exitosa!",
             description: "Te has suscrito correctamente al newsletter.",
@@ -199,7 +200,8 @@ export function Information({ onComplete, onEmail, onPubKey, disabled, store, on
             (variant === 'email' ? !name || !email : !pubkey) || 
             (newsletter && variant === 'pubkey' && !email) || 
             loading || 
-            disabled
+            disabled ||
+            ticketsSoldOut
           }
           type='submit'
         >
@@ -361,9 +363,10 @@ interface CustomAccordion {
   price: number;
   onSubmited: (value: boolean) => void;
   discountCode?: string | null;
+  ticketsSoldOut: boolean;
 }
 
-export function CustomAccordion({ store, product, quantity, readOnly, price, onSubmited, discountCode }: CustomAccordion) {
+export function CustomAccordion({ store, product, quantity, readOnly, price, onSubmited, discountCode, ticketsSoldOut }: CustomAccordion) {
   const [activeStep, setActiveStep] = useState<Step>(readOnly ? 'payment' : 'information');
   const [completedSteps, setCompletedSteps] = useState<Step[]>([]);
 
@@ -452,6 +455,7 @@ export function CustomAccordion({ store, product, quantity, readOnly, price, onS
           <Information
             store={store}
             disabled={readOnly}
+            ticketsSoldOut={ticketsSoldOut}
             onEmail={setEmail}
             onPubKey={setPubkey}
             onComplete={async (id) => {

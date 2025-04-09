@@ -5,11 +5,10 @@ interface SendySubscribeResponse {
     message: string;
   }
   
-  export async function subscribeToSendy(email: string, name: string): Promise<SendySubscribeResponse> {
+  export async function subscribeToSendy(email: string, name: string, listId: string): Promise<SendySubscribeResponse> {
     try {
       const sendyUrl = process.env.NEXT_SENDY_URL;
       const apiKey = process.env.NEXT_SENDY_API_KEY;
-      const listId = process.env.NEXT_SENDY_LIST_ID;
 
       if (!sendyUrl || !apiKey) {
         throw new Error('Sendy configuration is missing');

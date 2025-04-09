@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     NEXT_SENDY_URL: process.env.SENDY_URL,
     NEXT_SENDY_API_KEY: process.env.SENDY_API_KEY,
     NEXT_SENDY_LIST_ID: process.env.SENDY_LIST_ID,
+    NEXT_SENDY_WAITLIST_ID: process.env.SENDY_WAITLIST_ID,
     NEXT_DISCOUNT_CODE1: process.env.DISCOUNT_CODE1,
     NEXT_DISCOUNT_CODE2: process.env.DISCOUNT_CODE2,
     NEXT_DISCOUNT_CODE3: process.env.DISCOUNT_CODE3,
