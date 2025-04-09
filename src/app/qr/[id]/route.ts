@@ -3,13 +3,12 @@ import QRCode from 'qrcode';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> } // `params` es ahora un Promise
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Resolver el Promise para obtener los parámetros
     const { id: orderId } = await context.params;
 
-    // Generar el QR code en formato PNG como un buffer
+    // Generate the QR code
     const qrBuffer = await QRCode.toBuffer(orderId, {
       errorCorrectionLevel: 'H',
       margin: 1,
@@ -20,7 +19,6 @@ export async function GET(
       },
     });
 
-    // Retornar la imagen con los headers adecuados
     return new NextResponse(qrBuffer, {
       headers: {
         'Content-Type': 'image/png',
