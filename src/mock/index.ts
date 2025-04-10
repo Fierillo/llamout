@@ -27,14 +27,14 @@ export const PRODUCT = {
   // currency: only 'SAT'
   currency: 'ARS',
   variants: null,
-  quantity: 30,
+  quantity: 10,
   discounts: [
     {
       code: process.env.NEXT_DISCOUNT_CODE1,
       description: 'Para los guerreros de ACERO',
       amount: 20,
       type: 'percentage',
-      valid_until: '2025-04-10',
+      valid_until: '2025-04-11',
       valid_from: '2025-04-01',
       // max_uses: 0,
     },
