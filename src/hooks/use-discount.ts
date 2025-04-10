@@ -39,7 +39,7 @@ export function useDiscount(
     const validFrom = new Date(discount.valid_from);
     const validUntil = new Date(discount.valid_until);
 
-    if (today < validFrom || today > validUntil) {
+    if (today <= validFrom || today >= validUntil) {
       setError('El código de descuento es valido solo entre ' + discount.valid_from + ' y ' + discount.valid_until);
       setAppliedDiscount(null);
       setDiscountAmount(0);
